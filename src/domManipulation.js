@@ -23,30 +23,62 @@ confirmBtn.addEventListener("click", () => {
     })    
 });
 //weather[0] is the weather data today
-function constructLeftBar(weather){
-    /* let res1 = displayWeatherIcon(weather[0].icon)
-    let res2 = displayTemperature(weather[0].temp)
-    leftContainer.appendChild(res1);
-    leftContainer.appendChild(res2); */
-    displayWeatherIcon(weather[0].icon)
-     displayTemperature(weather[0].temp)
+async function constructLeftBar(weather) {
+    //this is needed to display the icon first and then the temperature 
+    //because inside createWeatherIcon there is a dynamic import which is asynchronous
+    const [iconElement, temperatureElement, dayTime] = await Promise.all([
+        createWeatherIcon(weather[0].icon),
+        createTemperatureElement(weather[0].temp),
+        createDayTime(weather[0].datetime)
+    ]);
+
+    
+    leftContainer.appendChild(iconElement);
+    leftContainer.appendChild(temperatureElement);
+    leftContainer.appendChild(dayTime);
 }
 
-function displayWeatherIcon(weatherStatus){
-    import(`../weather_icons/${weatherStatus}.png`).then((module) => {
-        let testImage = document.createElement("img");
-        testImage.id="leftWeatherIcon";
-        testImage.src=module.default;
-         leftContainer.appendChild(testImage)
-      
-        
-    });
+async function createWeatherIcon(weatherStatus) {
+    const module = await import(`../weather_icons/${weatherStatus}.png`);
+    const img = document.createElement("img");
+    img.id = "leftWeatherIcon";
+    img.src = module.default;
+    return img;
 }
 
-function displayTemperature(temp){
-    let temperature = document.createElement("p");
-    temperature.textContent = convertToCelcius(+ temp);
-    leftContainer.appendChild(temperature);
-   
+function createTemperatureElement(temp) {
+    const p = document.createElement("p");
+    p.id = "leftTemperature";
+    p.textContent = `${convertToCelcius(+temp)}°C`;
+    return p;
 }
+
+function createDayTime(dateString) {
+    const date = new Date(dateString);
+    const dayIndex = date.getDay();
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const dayName = daysOfWeek[dayIndex];
+
+    const dayTimeContainer = document.createElement("div");
+    dayTimeContainer.id = "dayTimeContainer";
+
+    const dayElement = document.createElement("p");
+    dayElement.id = "dayElement";
+
+    dayElement.textContent = `${dayName},`;
+    dayTimeContainer.appendChild(dayElement);
+
+    const today = new Date();
+    //pads single digit hours/minutes with a leading zero
+    const hours = today.getHours().toString().padStart(2, '0');
+    const minutes = today.getMinutes().toString().padStart(2, '0');
+    const time= `${hours}:${minutes}`;
+    const timeElement = document.createElement("p");
+    timeElement.id = "timeElement";
+    timeElement.textContent = time;
+    dayTimeContainer.appendChild(timeElement);
+
+    return dayTimeContainer;
+}
+
 

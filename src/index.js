@@ -25,7 +25,6 @@ function makeWeatherObject(apiResponse){
 //API response is temperature in Fahrenheit, this function will convert it in Celsius
 function convertToCelcius (temp){
     let temperature =  Math.trunc(( temp -  32) * 5 / 9);
-    console.log(temperature);
     return temperature;
 }
 
