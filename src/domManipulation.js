@@ -9,19 +9,112 @@ import "./styles.css"
 const confirmBtn = document.getElementById("confirmLocation");
 const location = document.getElementById("targetLocation");
 const leftContainer = document.querySelector(".leftContainer");
+const searchContainer = document.getElementById("searchContainer");
+
+const rightContainer = document.querySelector(".rightContainer");
+const daysContainer = document.querySelector(".daysContainer");
+
+//choices is the container for today's or week's weather
+const choices = document.querySelector(".choices");
+//unitChoices is the list for celsius or fahrenheit selection
+const unitChoices = document.querySelector(".temperatureUnits");
 
 let weather;
+
+
+
+choices.addEventListener("click", (e) => {
+    //to prevent the event from firing when clicking on the container itself
+    if (e.target === choices) return;
+
+    const previousSelected = document.querySelector(".choiceClicked");
+    if (previousSelected) {
+        previousSelected.classList.remove("choiceClicked");
+    }
+    e.target.classList.add("choiceClicked");
+    
+    if (weather === undefined) {
+        return;
+    }
+    else {
+        clearWeekWeather();
+        if (e.target.id === "today") {
+            //clear right container and show today's weather
+            console.log("today's weather");
+        } else if (e.target.id === "week") {
+            //clear right container and show week's weather
+            //rightContainer.innerHTML = "";
+            createWeatherCards();
+            console.log("week's weather");
+        }
+    }
+
+});
+function createWeatherCards(){
+    for(let i=0; i<weather.length; i++){
+        createWeatherCard(weather[i],i).then((dayWeatherDiv)=>{
+            daysContainer.appendChild(dayWeatherDiv);
+        });
+    }
+
+}
+
+async function createWeatherCard(dayWeather,i) {
+    //create elements for each day's weather and append to rightContainer
+                const dayWeatherDiv = document.createElement("div");
+                dayWeatherDiv.classList.add("dayCard");
+
+                const date = new Date(dayWeather.datetime);
+                const dayIndex = date.getDay();
+                const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+                const dayName = daysOfWeek[dayIndex];
+
+                const dayNameP = document.createElement("p");
+                dayNameP.textContent = dayName;
+                const module = await import(`../weather_icons/${dayWeather.icon}.png`);
+                const img = document.createElement("img");
+                img.src = module.default;
+                dayWeatherDiv.appendChild(img);
+                dayWeatherDiv.appendChild(dayNameP);
+
+                const tempP = document.createElement("p");
+                tempP.textContent = `${convertToCelcius(+dayWeather.temp)}°C`;
+                dayWeatherDiv.appendChild(tempP);
+
+                return dayWeatherDiv; 
+}
+unitChoices.addEventListener("click", (e) => {
+    //to prevent the event from firing when clicking on the container itself
+    if (e.target === unitChoices) return;
+    const previousSelected = document.querySelector(".temperatureUnitClicked");
+    if (previousSelected) {
+        previousSelected.classList.remove("temperatureUnitClicked");
+    }
+    e.target.classList.add("temperatureUnitClicked");
+});
+
+
+
+
 confirmBtn.addEventListener("click", () => {
     let weatherData = getWeatherByLocation(location.value);
     weatherData.then(function (res) { 
         weather = res;
         console.log(weather);
+        clearLeftBar();
+        clearWeekWeather()
         constructLeftBar(weather);
         
-
-
     })    
 });
+//clears the left container, except for the search bar.
+function clearLeftBar() {
+    leftContainer.innerHTML = "";
+    leftContainer.appendChild(searchContainer);
+}
+function clearWeekWeather() {
+    daysContainer.innerHTML = "";
+}
 //weather[0] is the weather data today
 async function constructLeftBar(weather) {
     //this is needed to display the icon first and then the temperature 
@@ -80,5 +173,7 @@ function createDayTime(dateString) {
 
     return dayTimeContainer;
 }
+
+
 
 

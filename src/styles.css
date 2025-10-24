@@ -32,6 +32,8 @@ body {
     width: 70%;
     background-color: grey;
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 #searchContainer {
@@ -79,5 +81,62 @@ body {
     font-family: 'suse', monospace;
     margin: 0;
     display: flex;
+}
+
+.rightHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'suse', monospace;
+}
+.choices {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    margin-left: 1rem;
+}
+.choiceClicked {
+    font-weight: bold;
+    text-decoration: underline;
+}
+.temperatureUnits {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 1rem;
+    margin-right: 1rem;
+}
+
+.temperatureUnit {
+    display: flex;
+    border-radius: 50%;
+    background-color: white;
+    height: 30px;
+    width: 30px;
+    justify-content: center;
+    align-items: center;
+}
+.temperatureUnitClicked {
+    font-weight: bold;
+    background-color: black;
+    color: white;
+}
+
+.daysContainer {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 2rem;
+
+}
+.dayCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dayCard img {
+    height: 50%;
+    width: 50%;
 }
 
