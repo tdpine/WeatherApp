@@ -24,12 +24,20 @@ function makeWeatherObject(apiResponse){
 
 //API response is temperature in Fahrenheit, this function will convert it in Celsius
 function convertToCelcius (temp){
-    let temperature =  Math.trunc(( temp -  32) * 5 / 9);
+    //let temperature =  Math.trunc(( temp -  32) * 5 / 9);
+    let temperature =  Math.round(( temp -  32) * 5 / 9);
+    return temperature;
+}
+
+function convertToFahrenheit (temp){
+    //let temperature = Math.trunc((temp * 9 / 5) + 32);
+    let temperature = Math.round((temp * 9 / 5) + 32);
     return temperature;
 }
 
 export{
        getWeatherByLocation,
        makeWeatherObject,
-       convertToCelcius
+       convertToCelcius,
+       convertToFahrenheit
 };

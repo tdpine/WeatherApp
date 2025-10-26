@@ -133,10 +133,27 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    background-color: white;
+    border-radius: 5%;
+    height: 20vh;
+    width: 5vw;
 }
 
 .dayCard img {
     height: 50%;
     width: 50%;
+}
+
+.todayCards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+.todayCards > div {
+    background-color: white;
+    border-radius: 5%;
+    height: 20vh;
+    width: 5vw;
 }
 
