@@ -197,6 +197,7 @@ function createDayTime(dateString) {
 function changeTempUnit (newUnit, oldUnit) {
     
     const leftTemp = document.getElementById("leftTemperature");
+    const numClicks = document.querySelectorAll(".temperatureUnitClicked").length;
     let temp;
     //if there is no temperature in the leftSide, no API call has been done, so there is no data
     if (leftTemp) {
@@ -210,37 +211,40 @@ function changeTempUnit (newUnit, oldUnit) {
 
     const dayCardsTemps = document.querySelectorAll(".dayCard > .cardTemperature");
    
-    if (!dayCardsTemps) {
-       return;
-    }
-
     // new temp in left section
     let newTemp;
-    //no change of unit of measure
-    if(newUnit == oldUnit || oldUnit == null){
+    //no change of unit of measure 
+    if(newUnit == oldUnit && numClicks == 0){
         return;
     }
     else if (newUnit == "celsius"){
         newTemp = `${convertToCelcius(+temp)}°C`;
         //update temp in the week container
-        dayCardsTemps.forEach((dayCardTemp) => {
-            //gets only the temperature value without the unit of measure
-            let oldTemp = dayCardTemp.textContent.slice(0, dayCardTemp.textContent.length - 2);
-            dayCardTemp.textContent = `${convertToCelcius(+oldTemp)}°C`;
-        });
+         if (dayCardsTemps) {
+            dayCardsTemps.forEach((dayCardTemp) => {
+                //gets only the temperature value without the unit of measure
+                let oldTemp = dayCardTemp.textContent.slice(0, dayCardTemp.textContent.length - 2);
+                dayCardTemp.textContent = `${convertToCelcius(+oldTemp)}°C`;
+            });
+        };
+
     }
     else{
         newTemp = `${convertToFahrenheit(+temp)}°F`;
         //update temp in the week container
-        dayCardsTemps.forEach((dayCardTemp) => {
+          if (dayCardsTemps) {
+            dayCardsTemps.forEach((dayCardTemp) => {
             //gets only the temperature value without the unit of measure
             let oldTemp = dayCardTemp.textContent.slice(0, dayCardTemp.textContent.length - 2);
             dayCardTemp.textContent = `${convertToFahrenheit(+oldTemp)}°F`;
-        });
+            });
+        };
+      
     }
     //update leftTemp
         leftTemp.textContent = newTemp;
 }
+
 //creates the cards for today's weather highlights
 function createTodayHighlights(todayWeather)
 {
